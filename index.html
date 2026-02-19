@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Analyst – First Screening</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0d14;
+    --surface: #111520;
+    --border: #1e2538;
+    --accent: #00d4ff;
+    --accent2: #0066ff;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --success: #00e5a0;
+    --error: #ff4466;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 400;
+    min-height: 100vh;
+    padding: 40px 20px 80px;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* Background grid */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+
+  .badge {
+    display: inline-block;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid rgba(0,212,255,0.3);
+    padding: 6px 16px;
+    border-radius: 2px;
+    margin-bottom: 20px;
+    background: rgba(0,212,255,0.05);
+  }
+
+  .header h1 {
+    font-family: 'Space Mono', monospace;
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+    margin-bottom: 12px;
+    background: linear-gradient(135deg, #fff 0%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .header p {
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.6;
+    max-width: 520px;
+    margin: 0 auto;
+  }
+
+  .estimate {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 14px;
+    font-size: 13px;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+  }
+
+  .estimate span { color: var(--accent); }
+
+  /* Section */
+  .section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 28px 32px;
+    margin-bottom: 20px;
+    transition: border-color 0.2s;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .section:hover { border-color: rgba(0,212,255,0.2); }
+
+  .section-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(0,212,255,0.3), transparent);
+  }
+
+  /* Field */
+  .field { margin-bottom: 20px; }
+  .field:last-child { margin-bottom: 0; }
+
+  .field label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: #94a3b8;
+    margin-bottom: 8px;
+    letter-spacing: 0.3px;
+  }
+
+  .field label .req { color: var(--accent); margin-left: 3px; }
+
+  .field input[type="text"],
+  .field input[type="email"],
+  .field input[type="number"],
+  .field select,
+  .field textarea {
+    width: 100%;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px 16px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+    -webkit-appearance: none;
+  }
+
+  .field input:focus,
+  .field select:focus,
+  .field textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(0,212,255,0.08);
+    background: rgba(0,212,255,0.02);
+  }
+
+  .field select option { background: #111520; }
+
+  .field textarea {
+    resize: vertical;
+    min-height: 100px;
+    line-height: 1.6;
+  }
+
+  .field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  @media (max-width: 560px) {
+    .field-row { grid-template-columns: 1fr; }
+    .section { padding: 22px 20px; }
+  }
+
+  /* Checkboxes – skills grid */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+  }
+
+  .skill-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px 14px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    user-select: none;
+  }
+
+  .skill-item:hover { border-color: rgba(0,212,255,0.25); background: rgba(0,212,255,0.03); }
+
+  .skill-item input[type="checkbox"] { display: none; }
+
+  .checkbox-box {
+    width: 18px;
+    height: 18px;
+    border: 1.5px solid var(--muted);
+    border-radius: 3px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.15s, background 0.15s;
+  }
+
+  .skill-item input:checked ~ .checkbox-box {
+    border-color: var(--accent);
+    background: var(--accent);
+  }
+
+  .skill-item input:checked ~ .checkbox-box::after {
+    content: '';
+    display: block;
+    width: 5px;
+    height: 9px;
+    border: 2px solid #0a0d14;
+    border-top: none;
+    border-left: none;
+    transform: rotate(45deg) translateY(-1px);
+  }
+
+  .skill-item:has(input:checked) {
+    border-color: rgba(0,212,255,0.4);
+    background: rgba(0,212,255,0.05);
+  }
+
+  .skill-label { font-size: 14px; font-weight: 500; }
+  .skill-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+  /* Soft skills ranking */
+  .rank-list { display: flex; flex-direction: column; gap: 8px; }
+
+  .rank-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px 16px;
+    cursor: grab;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    user-select: none;
+  }
+
+  .rank-item:active { cursor: grabbing; }
+  .rank-item.dragging { opacity: 0.5; border-color: var(--accent); }
+  .rank-item.drag-over { box-shadow: 0 -2px 0 var(--accent); }
+
+  .rank-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    width: 18px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  .rank-name { font-size: 14px; font-weight: 500; flex: 1; }
+
+  .drag-icon {
+    color: var(--muted);
+    font-size: 16px;
+    flex-shrink: 0;
+    pointer-events: none;
+  }
+
+  .rank-hint {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+
+  /* English level */
+  .level-options {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .level-btn {
+    position: relative;
+  }
+
+  .level-btn input { display: none; }
+
+  .level-btn label {
+    display: block;
+    padding: 8px 18px;
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.15s;
+    color: var(--muted);
+    font-weight: 500;
+  }
+
+  .level-btn input:checked + label {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(0,212,255,0.08);
+  }
+
+  .level-btn label:hover {
+    border-color: rgba(0,212,255,0.4);
+    color: var(--text);
+  }
+
+  /* File upload */
+  .file-drop {
+    border: 1.5px dashed var(--border);
+    border-radius: 8px;
+    padding: 28px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    position: relative;
+  }
+
+  .file-drop:hover, .file-drop.has-file {
+    border-color: rgba(0,212,255,0.4);
+    background: rgba(0,212,255,0.03);
+  }
+
+  .file-drop input[type="file"] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+  }
+
+  .file-drop .file-icon { font-size: 28px; margin-bottom: 8px; }
+  .file-drop .file-text { font-size: 14px; color: var(--muted); }
+  .file-drop .file-name { font-size: 13px; color: var(--accent); margin-top: 6px; font-family: 'Space Mono', monospace; display: none; }
+
+  /* Submit */
+  .submit-wrap { text-align: center; margin-top: 32px; }
+
+  .btn-submit {
+    background: linear-gradient(135deg, var(--accent2), var(--accent));
+    border: none;
+    border-radius: 6px;
+    padding: 16px 48px;
+    color: #fff;
+    font-family: 'Space Mono', monospace;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.1s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-submit::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0.1);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .btn-submit:hover::after { opacity: 1; }
+  .btn-submit:active { transform: scale(0.98); }
+  .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .submit-note { font-size: 12px; color: var(--muted); margin-top: 12px; }
+
+  /* Toast */
+  #toast {
+    position: fixed;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--success);
+    color: #0a0d14;
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 14px 28px;
+    border-radius: 6px;
+    opacity: 0;
+    transition: all 0.3s;
+    pointer-events: none;
+    z-index: 100;
+  }
+
+  #toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  #toast.error { background: var(--error); color: #fff; }
+
+  /* Progress bar */
+  .progress-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 36px;
+  }
+
+  .progress-bar {
+    flex: 1;
+    height: 2px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent2), var(--accent));
+    width: 0%;
+    transition: width 0.4s ease;
+  }
+
+  .progress-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    min-width: 60px;
+    text-align: right;
+  }
+
+  /* Salary row */
+  .salary-prefix {
+    position: relative;
+  }
+  .salary-prefix span {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    font-size: 14px;
+    pointer-events: none;
+  }
+  .salary-prefix input { padding-left: 32px !important; }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="badge">Global Cybersecurity Company</div>
+    <h1>Data Analyst<br>First Screening</h1>
+    <p>Antes de avanzar en el proceso, nos gustaría conocerte mejor. Este formulario toma menos de 5 minutos en completarse.</p>
+    <div class="estimate">⏱ <span>~5 min</span> · Todos los campos son requeridos salvo indicación contraria</div>
+  </div>
+
+  <!-- Progress -->
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-label" id="progressLabel">0%</div>
+  </div>
+
+  <form id="screeningForm" novalidate>
+
+    <!-- 1. Información Personal -->
+    <div class="section" style="animation-delay:0.05s">
+      <div class="section-title">01 · Información Personal</div>
+
+      <div class="field">
+        <label>Nombre completo <span class="req">*</span></label>
+        <input type="text" name="nombre" placeholder="Ej. María García López" required>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label>Ciudad actual <span class="req">*</span></label>
+          <input type="text" name="ciudad" placeholder="Ej. Madrid" required>
+        </div>
+        <div class="field">
+          <label>País <span class="req">*</span></label>
+          <input type="text" name="pais" placeholder="Ej. España" required>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Email de contacto <span class="req">*</span></label>
+        <input type="email" name="email" placeholder="nombre@email.com" required>
+      </div>
+    </div>
+
+    <!-- 2. Formación -->
+    <div class="section" style="animation-delay:0.10s">
+      <div class="section-title">02 · Formación Académica</div>
+
+      <div class="field-row">
+        <div class="field">
+          <label>Nivel educativo <span class="req">*</span></label>
+          <select name="nivel_educativo" required>
+            <option value="" disabled selected>Seleccionar...</option>
+            <option>Grado / Licenciatura</option>
+            <option>Máster</option>
+            <option>Doctorado</option>
+            <option>Otro</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Área de estudio <span class="req">*</span></label>
+          <input type="text" name="area_estudio" placeholder="Ej. Economía, Informática..." required>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Situación Profesional -->
+    <div class="section" style="animation-delay:0.15s">
+      <div class="section-title">03 · Situación Profesional Actual</div>
+
+      <div class="field-row">
+        <div class="field">
+          <label>Empresa actual <span class="req">*</span></label>
+          <input type="text" name="empresa_actual" placeholder="Nombre de la empresa" required>
+        </div>
+        <div class="field">
+          <label>Rol actual <span class="req">*</span></label>
+          <input type="text" name="rol_actual" placeholder="Ej. Data Analyst Junior" required>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Motivador de cambio <span class="req">*</span></label>
+        <textarea name="motivador_cambio" placeholder="¿Qué te motiva a explorar nuevas oportunidades en este momento?" required></textarea>
+      </div>
+    </div>
+
+    <!-- 4. Background sector -->
+    <div class="section" style="animation-delay:0.20s">
+      <div class="section-title">04 · Background Sectorial</div>
+
+      <div class="field">
+        <label>Experiencia en ciberseguridad y/o sector financiero <span class="req">*</span></label>
+        <textarea name="background_sector" placeholder="Describe brevemente tu experiencia o conocimiento en el sector de ciberseguridad y/o financiero. Si no tienes experiencia directa, indícalo." required style="min-height:90px"></textarea>
+      </div>
+    </div>
+
+    <!-- 5. Technical Skills -->
+    <div class="section" style="animation-delay:0.25s">
+      <div class="section-title">05 · Technical Skills</div>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:16px;">Marca las tecnologías con las que tienes experiencia:</p>
+
+      <div class="skills-grid">
+
+        <label class="skill-item">
+          <input type="checkbox" name="skill_sql" value="SQL">
+          <div class="checkbox-box"></div>
+          <div>
+            <div class="skill-label">SQL</div>
+            <div class="skill-sub">Consultas & bases de datos</div>
+          </div>
+        </label>
+
+        <label class="skill-item">
+          <input type="checkbox" name="skill_databricks" value="Databricks">
+          <div class="checkbox-box"></div>
+          <div>
+            <div class="skill-label">Databricks</div>
+            <div class="skill-sub">Plataforma de datos</div>
+          </div>
+        </label>
+
+        <label class="skill-item">
+          <input type="checkbox" name="skill_powerbi" value="Power BI">
+          <div class="checkbox-box"></div>
+          <div>
+            <div class="skill-label">Power BI</div>
+            <div class="skill-sub">Dashboards & reporting</div>
+          </div>
+        </label>
+
+        <label class="skill-item">
+          <input type="checkbox" name="skill_python" value="Python">
+          <div class="checkbox-box"></div>
+          <div>
+            <div class="skill-label">Python</div>
+            <div class="skill-sub">Análisis & programación</div>
+          </div>
+        </label>
+
+        <label class="skill-item">
+          <input type="checkbox" name="skill_agile" value="Agile (Scrum/Kanban)">
+          <div class="checkbox-box"></div>
+          <div>
+            <div class="skill-label">Agile Methodologies</div>
+            <div class="skill-sub">Scrum & Kanban</div>
+          </div>
+        </label>
+
+      </div>
+    </div>
+
+    <!-- 6. Soft Skills -->
+    <div class="section" style="animation-delay:0.30s">
+      <div class="section-title">06 · Soft Skills</div>
+      <p class="rank-hint">Ordena las siguientes habilidades de mayor a menor según tus fortalezas (arrastra para reordenar):</p>
+
+      <div class="rank-list" id="rankList">
+        <div class="rank-item" draggable="true" data-skill="Communication">
+          <div class="rank-num">1</div>
+          <div class="rank-name">Communication</div>
+          <div class="drag-icon">⠿</div>
+        </div>
+        <div class="rank-item" draggable="true" data-skill="Collaboration">
+          <div class="rank-num">2</div>
+          <div class="rank-name">Collaboration</div>
+          <div class="drag-icon">⠿</div>
+        </div>
+        <div class="rank-item" draggable="true" data-skill="Problem Solving">
+          <div class="rank-num">3</div>
+          <div class="rank-name">Problem Solving</div>
+          <div class="drag-icon">⠿</div>
+        </div>
+        <div class="rank-item" draggable="true" data-skill="Multitasking">
+          <div class="rank-num">4</div>
+          <div class="rank-name">Multitasking</div>
+          <div class="drag-icon">⠿</div>
+        </div>
+        <div class="rank-item" draggable="true" data-skill="Stakeholder Management">
+          <div class="rank-num">5</div>
+          <div class="rank-name">Stakeholder Management</div>
+          <div class="drag-icon">⠿</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. Idiomas & Compensación -->
+    <div class="section" style="animation-delay:0.35s">
+      <div class="section-title">07 · Idiomas & Compensación</div>
+
+      <div class="field">
+        <label>Nivel de inglés <span class="req">*</span></label>
+        <div class="level-options">
+          <div class="level-btn"><input type="radio" name="ingles" id="eng_b1" value="B1 – Intermedio" required><label for="eng_b1">B1 – Intermedio</label></div>
+          <div class="level-btn"><input type="radio" name="ingles" id="eng_b2" value="B2 – Intermedio alto"><label for="eng_b2">B2 – Intermedio alto</label></div>
+          <div class="level-btn"><input type="radio" name="ingles" id="eng_c1" value="C1 – Avanzado"><label for="eng_c1">C1 – Avanzado</label></div>
+          <div class="level-btn"><input type="radio" name="ingles" id="eng_c2" value="C2 – Proficiency"><label for="eng_c2">C2 – Proficiency</label></div>
+          <div class="level-btn"><input type="radio" name="ingles" id="eng_native" value="Nativo"><label for="eng_native">Nativo</label></div>
+        </div>
+      </div>
+
+      <div class="field-row" style="margin-top:20px">
+        <div class="field">
+          <label>Sueldo actual (bruto anual) <span class="req">*</span></label>
+          <div class="salary-prefix">
+            <span>€</span>
+            <input type="number" name="sueldo_actual" placeholder="40000" min="0" required>
+          </div>
+        </div>
+        <div class="field">
+          <label>Rango sueldo deseado <span class="req">*</span></label>
+          <select name="rango_sueldo" required>
+            <option value="" disabled selected>Seleccionar rango...</option>
+            <option>Hasta €35.000</option>
+            <option>€35.000 – €45.000</option>
+            <option>€45.000 – €55.000</option>
+            <option>€55.000 – €65.000</option>
+            <option>€65.000 – €80.000</option>
+            <option>Más de €80.000</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- 8. CV -->
+    <div class="section" style="animation-delay:0.40s">
+      <div class="section-title">08 · Curriculum Vitae</div>
+
+      <div class="file-drop" id="fileDrop">
+        <input type="file" name="cv_file" id="cvFile" accept=".pdf,.doc,.docx" required>
+        <div class="file-icon">📄</div>
+        <div class="file-text">Haz clic o arrastra tu CV aquí<br><small>PDF, DOC o DOCX · Máx. 5 MB</small></div>
+        <div class="file-name" id="fileName"></div>
+      </div>
+    </div>
+
+    <!-- Submit -->
+    <div class="submit-wrap">
+      <button type="submit" class="btn-submit" id="submitBtn">Enviar Formulario</button>
+      <p class="submit-note">Tus datos serán tratados de forma confidencial.</p>
+    </div>
+
+  </form>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ─── CONFIGURACIÓN ──────────────────────────────────────────────────
+// IMPORTANTE: Pega aquí la URL de tu Google Apps Script Web App
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw9_IYYPp-vCp5UMubJV1__la0ZXUQ92cVv2v4qPTvpK144b_05cJiSseubBslcZukfbQ/exec';
+// ────────────────────────────────────────────────────────────────────
+
+// Drag & drop ranking
+const rankList = document.getElementById('rankList');
+let dragging = null;
+
+rankList.querySelectorAll('.rank-item').forEach(item => {
+  item.addEventListener('dragstart', () => { dragging = item; item.classList.add('dragging'); });
+  item.addEventListener('dragend', () => { dragging = null; item.classList.remove('dragging'); updateNumbers(); });
+  item.addEventListener('dragover', e => { e.preventDefault(); if(dragging && dragging !== item) { const rect = item.getBoundingClientRect(); const mid = rect.top + rect.height/2; if(e.clientY < mid) { rankList.insertBefore(dragging, item); } else { rankList.insertBefore(dragging, item.nextSibling); } } });
+});
+
+function updateNumbers() {
+  rankList.querySelectorAll('.rank-item').forEach((item, i) => {
+    item.querySelector('.rank-num').textContent = i + 1;
+  });
+}
+
+// File drop
+const cvFile = document.getElementById('cvFile');
+const fileName = document.getElementById('fileName');
+const fileDrop = document.getElementById('fileDrop');
+
+cvFile.addEventListener('change', () => {
+  if(cvFile.files[0]) {
+    fileName.style.display = 'block';
+    fileName.textContent = '✓ ' + cvFile.files[0].name;
+    fileDrop.classList.add('has-file');
+  }
+  updateProgress();
+});
+
+// Progress
+function updateProgress() {
+  const form = document.getElementById('screeningForm');
+  const required = form.querySelectorAll('[required]');
+  let filled = 0;
+  required.forEach(el => {
+    if(el.type === 'radio') {
+      const name = el.name;
+      if(form.querySelector(`[name="${name}"]:checked`)) filled++;
+    } else if(el.type === 'file') {
+      if(el.files && el.files.length > 0) filled++;
+    } else if(el.tagName === 'SELECT') {
+      if(el.value) filled++;
+    } else {
+      if(el.value.trim()) filled++;
+    }
+  });
+  // Deduplicate radio groups
+  const radioGroups = new Set([...form.querySelectorAll('[type="radio"][required]')].map(r=>r.name));
+  const totalRequired = form.querySelectorAll('[required]:not([type="radio"])').length + radioGroups.size;
+  
+  const pct = Math.round((Math.min(filled, totalRequired) / totalRequired) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = pct + '%';
+}
+
+document.getElementById('screeningForm').addEventListener('input', updateProgress);
+document.getElementById('screeningForm').addEventListener('change', updateProgress);
+
+// Toast
+function showToast(msg, isError) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = isError ? 'error show' : 'show';
+  setTimeout(() => t.className = '', 4000);
+}
+
+// Submit
+document.getElementById('screeningForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = 'Enviando...';
+
+  // Gather soft skills ranking
+  const ranking = [...rankList.querySelectorAll('.rank-item')].map((el,i) => `${i+1}. ${el.dataset.skill}`).join(' | ');
+
+  // Gather checkboxes
+  const skills = [];
+  document.querySelectorAll('input[type="checkbox"]:checked').forEach(cb => skills.push(cb.value));
+
+  // Build payload
+  const form = this;
+  const data = {
+    nombre: form.nombre.value,
+    ciudad: form.ciudad.value,
+    pais: form.pais.value,
+    email: form.email.value,
+    nivel_educativo: form.nivel_educativo.value,
+    area_estudio: form.area_estudio.value,
+    empresa_actual: form.empresa_actual.value,
+    rol_actual: form.rol_actual.value,
+    motivador_cambio: form.motivador_cambio.value,
+    background_sector: form.background_sector.value,
+    technical_skills: skills.join(', ') || 'Ninguno',
+    soft_skills_ranking: ranking,
+    ingles: form.ingles.value,
+    sueldo_actual: form.sueldo_actual.value,
+    rango_sueldo: form.rango_sueldo.value,
+    cv_adjunto: cvFile.files[0] ? cvFile.files[0].name : 'No adjuntado',
+    timestamp: new Date().toLocaleString('es-ES')
+  };
+
+  try {
+    await fetch(GOOGLE_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    showToast('✓ Formulario enviado correctamente. ¡Gracias!');
+    form.reset();
+    fileDrop.classList.remove('has-file');
+    fileName.style.display = 'none';
+    document.getElementById('progressFill').style.width = '0%';
+    document.getElementById('progressLabel').textContent = '0%';
+    updateNumbers();
+  } catch(err) {
+    showToast('Error al enviar. Intenta de nuevo.', true);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Enviar Formulario';
+  }
+});
+</script>
+</body>
+</html>
